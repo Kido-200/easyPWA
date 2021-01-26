@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- 引入引用清单文件 -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <h1>hello pwa</h1>
+  <script>
+    window.addEventListener('load',async () => {
+      if('serviceWorker' in navigator){
+        try{
+          const registration = await navigator.serviceWorker.register('./sw.js')
+          console.log('注册成功',registration);
+        }catch(e){
+          console.log('注册失败');
+        }
+      }
+    })
+
+    /*
+      如果页面一进来,我们发现用户没联网，给用户一个通知
+    */
+   if(Notification.permission === 'default'){
+     Notification.requestPermission()
+   }
+   console.log(navigator.onLine);
+   if(!navigator.onLine){
+    new Notification('提示',{body:'你当前没有网络,你访问的是缓存'})
+   }
+   window.addEventListener('online',()=>{
+    new Notification('提示',{body:'你已经连上网络了,请刷新获得最新数据'})
+   })
+  </script>
+</body>
+</html>
